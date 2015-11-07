@@ -1,5 +1,7 @@
 lvs01 Cookbook
 ==============
+Linux Virtual Server (LVS)を使って負荷分散装置を構成するクックブック
+
 TODO: Enter the cookbook description here.
 
 e.g.
