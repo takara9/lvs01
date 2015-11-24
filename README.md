@@ -68,3 +68,14 @@ e.g.
 License and Authors
 -------------------
 Authors: TODO: List authors
+
+
+
+# ウェブサーバーのループバックI/Fに設定を追加する
+
+```
+auto lo:1
+iface lo:1 inet static
+      address 161.202.132.84
+      netmask 255.255.255.240
+```
