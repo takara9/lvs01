@@ -16,6 +16,12 @@ execute 'ufw_for_lvs' do
   ignore_failure true
 end
 
+execute 'ufw_for_http' do
+  command "/usr/sbin/ufw allow from #{node['virtual_portno1']}"
+  ignore_failure true
+end
+
+
 
 %w{
   nmon
