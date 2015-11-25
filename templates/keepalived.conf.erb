@@ -1,0 +1,35 @@
+! Configuration File for keepalived
+
+vrrp_instance VI_1 {
+    interface eth1
+    lvs_sync_daemon_interface eth0
+    virtual_router_id 51
+    priority 100
+    authentication {
+        auth_type PASS
+        auth_pass grr02
+    }
+    virtual_ipaddress {
+        <%= @vip1 %>
+    }
+}
+
+virtual_server <%= @vip1 %> <%= @vport1 %> {
+    delay_loop 20
+    lb_algo rr
+    lb_kind DR
+    persistence_timeout <%= @pst_to %>
+    protocol TCP
+    real_server <%= @rsv_ip1 %> <%= @rsv_pt1 %> {
+        weight 1
+        TCP_CHECK {
+            connect_timeout 3
+        }
+    }
+    real_server <%= @rsv_ip2 %> <%= @rsv_pt2 %> {
+        weight 1
+        TCP_CHECK {
+            connect_timeout 3
+        }
+    }
+}
