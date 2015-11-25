@@ -12,8 +12,9 @@ execute 'apt-get update' do
 end
 
 
+subnet = node['public_prim_subnet']
 execute 'ufw_for_lvs' do
-  command "/usr/sbin/ufw allow from node['public_prim_subnet']"
+  command "/usr/sbin/ufw allow from subnet"
   ignore_failure true
 end
 
