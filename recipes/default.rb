@@ -50,7 +50,7 @@ template "/etc/keepalived/keepalived.conf" do
 end
 
 execute 'sysctl' do
-  command '/sbin/sysclt -p'
+  command '/sbin/sysctl -p'
 end
 
 cookbook_file "/etc/sysctl.conf" do
