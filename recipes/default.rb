@@ -72,3 +72,16 @@ file "/etc/keepalived/keepalived.conf" do
   action :create
   notifies :restart, "service[keepalived]"
 end
+
+execute 'sysctl' do
+  command '/sbin/sysclt -p'
+end
+
+cookfile_file "/etc/sysctl.conf" do
+  source 'sysctl.conf'
+  owner "root"
+  group "root"
+  mode 0644
+  action :create
+  notifies :run, 'execute[sysctl]', :immediately
+end
