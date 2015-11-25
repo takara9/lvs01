@@ -53,7 +53,7 @@ execute 'sysctl' do
   command '/sbin/sysclt -p'
 end
 
-cookfile_file "/etc/sysctl.conf" do
+cookbook_file "/etc/sysctl.conf" do
   source 'sysctl.conf'
   owner "root"
   group "root"
