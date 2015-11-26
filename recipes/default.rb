@@ -86,4 +86,5 @@ cookbook_file "/etc/sysctl.conf" do
   mode 0644
   action :create
   notifies :run, 'execute[sysctl]', :immediately
+  ignore_failure true
 end
