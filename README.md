@@ -20,6 +20,8 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 ### 確認済オペレーティング・システム
 - Ubuntu Linux 14.04 LTS Trusty Tahr - Minimal Install (64 bit) 
 - Debian GNU/Linux 8.x jessie/Stable - Minimal Install (64 bit)
+- CentOS 6.x - Minimal Install (64 bit)
+
 
 ### ポータブル・サブネット
 https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。

@@ -6,33 +6,52 @@
 #
 #
 
-execute 'apt-get update' do
-  command 'apt-get update'
-  ignore_failure true
-end
+case node['platform']
+# === Debian系 ===
+when 'ubuntu','debian'
 
-execute 'ufw_for_lvs' do
-  command "/usr/sbin/ufw allow from #{node['public_prim_subnet']}"
-  ignore_failure true
-end
+  execute 'apt-get update' do
+    command 'apt-get update'
+    ignore_failure true
+  end
 
-execute 'ufw_for_http' do
-  command "/usr/sbin/ufw allow #{node['virtual_portno1']}"
-  ignore_failure true
-end
+  execute 'ufw_for_lvs' do
+    command "/usr/sbin/ufw allow from #{node['public_prim_subnet']}"
+    ignore_failure true
+  end
 
+  execute 'ufw_for_http' do
+    command "/usr/sbin/ufw allow #{node['virtual_portno1']}"
+    ignore_failure true
+  end
 
+  %w{
+    nmon
+    ipvsadm
+    keepalived
+    ufw
+  }.each do |pkgname|
+    package "#{pkgname}" do
+      action :install
+    end
+  end
 
-%w{
-  nmon
-  ipvsadm
-  keepalived
-  ufw
-}.each do |pkgname|
-  package "#{pkgname}" do
-    action :install
+# === RedHat系 ===
+when 'centos','redhat'
+  execute 'yum update' do
+    command 'yum update -y'
+    action :run
+  end
+  %w{
+    ipvsadm.x86_64
+    keepalived.x86_64 
+  }.each do |pkgname|
+    package "#{pkgname}" do
+      action :install
+    end
   end
 end
+
 
 service "keepalived" do
   action [ :enable, :start]
