@@ -7,6 +7,9 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 
 システム構成
 ------------
+このクックブックは、次の図の赤破線枠のLVSアクティブ-スタンバイの構成を作ります。マスター状態のLVSサーバーは、VIPを保持して振り分けを実施します。マスター状態のLVSサーバーが居なくなると、スタンバイ状態のLVSサーバーが昇格してVIPを保持して振り分けをおこないます。
+
+このクックブックで実現する要求の振分けは、DR(ダイレクト・ルーティング)です。この方式は、要求をVIPで受け、実サーバーへ要求パケットを転送します。応答は、LVSを経由せずに直接返します。
 ![LVSアクティブ-スタンバイ構成](docs/LVS_ActStby.png)
 
 
@@ -21,6 +24,8 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。
 
 * Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号
+
+* Webサーバー側のループバックI/F設定、ARP設定の変更
 
 
 
@@ -119,6 +124,10 @@ https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP
 3. RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
 4. RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
 5. Keepalived for Linux http://www.keepalived.org/
+6. ipvsadm(8) -Linux man page http://linux.die.net/man/8/ipvsadm
+7. keepalived.conf(5) - Linux man page http://linux.die.net/man/5/keepalived.conf
+
+
 
 
 License and Authors
