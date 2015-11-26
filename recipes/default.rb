@@ -27,6 +27,7 @@ end
   nmon
   ipvsadm
   keepalived
+  ufw
 }.each do |pkgname|
   package "#{pkgname}" do
     action :install
