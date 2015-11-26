@@ -77,6 +77,7 @@ end
 
 execute 'sysctl' do
   command '/sbin/sysctl -p'
+  action :nothing
 end
 
 template "/etc/sysctl.conf" do
