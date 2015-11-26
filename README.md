@@ -19,6 +19,7 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 
 ### 確認済オペレーティング・システム
 - Ubuntu Linux 14.04 LTS Trusty Tahr - Minimal Install (64 bit) 
+- Debian GNU/Linux 8.x jessie/Stable - Minimal Install (64 bit)
 
 ### ポータブル・サブネット
 https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。
@@ -46,6 +47,14 @@ net.ipv4.conf.all.arp_ignore = 1
 net.ipv4.conf.all.arp_announce = 2
 ```
 
+### その他必要なパッケージ
+ポストインストール・スクリプト等からインストールされていない場合は、以下の追加パッケージとファイアウォールの設定を行っておきます。
+
+```
+# apt-get install curl ufw git
+# ufw allow from 10.0.0.0/8
+# ufw enable
+```
 
 
 
@@ -130,6 +139,7 @@ net.ipv4.conf.all.arp_announce = 2
 
 使い方
 ------------
+
 以下の順番でコマンドを実行して、サーバーにクックブックを置きます。
 
 ```
@@ -144,6 +154,18 @@ net.ipv4.conf.all.arp_announce = 2
 # chef-solo -o lvs01
 ```
 
+### 動作確認
+次のコマンドで、VIPと実サーバーがリストされていれば、ひとまず動作している事になります。
+
+```
+root@lvs1:/var/chef/cookbooks# ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  161.202.132.84:80 rr
+  -> 161.202.142.204:80           Route   1      134        0         
+  -> 161.202.142.206:80           Route   1      135        0     
+```
 
 
 
