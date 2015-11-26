@@ -108,11 +108,11 @@ https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP
 
 参考資料
 ------------
-1.LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
-2.The Linux Virtual Server Project http://www.linuxvirtualserver.org
-3.RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
-4.RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
-5.Keepalived for Linux http://www.keepalived.org/
+1. LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
+2. The Linux Virtual Server Project http://www.linuxvirtualserver.org
+3. RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
+4. RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
+5. Keepalived for Linux http://www.keepalived.org/
 
 
 License and Authors
