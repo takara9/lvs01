@@ -17,20 +17,27 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 要件
 ------------
 
-* 確認済オペレーティング・システム
+### 確認済オペレーティング・システム
 - Ubuntu Linux 14.04 LTS Trusty Tahr - Minimal Install (64 bit) 
 
-* ポータブル・サブネット
+### ポータブル・サブネット
 https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。
 
-* Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号
-
-* Webサーバー側のループバックI/F設定、ARP設定の変更
+### その他
+- Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号
+- Webサーバー側のループバックI/F設定、ARP設定の変更
 
 
 
 アトリビュート
 ----------
+
+実サーバーが３台以上ある場合、["real_server_ip_addrN"],["real_server_portN"]を attributes/default.rb に追加し、recipes と templates の当該する変数を追加して、振分け対象を認識できる様にします。
+
+["persistence_timeout"]に"0"を設定すると、実サーバーへ順番に割り当てていきます。そして、例えば、300をセットすると、最初に降り分けられた実サーバーへ継続的に降られる様になり、最後にアクセスしてから300秒（5分）を超過すると、新たに振分け先を決定します。
+
+["public_prim_subnet"]は、パブリック側のプライマリ・サブネットのサブネットとネットマスクを設定します。これはアクティとスタンバイのLVSノードが、相互のパブリック側ポートを監視できる様にするためです。
+
 
 #### lvs01::default
 <table>
@@ -99,6 +106,8 @@ https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP
 </table>
 
 
+
+
 使い方
 ------------
 以下の順番でコマンドを実行して、サーバーにクックブックを置きます。
@@ -114,6 +123,8 @@ https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP
 ```
 # chef-solo -o lvs01
 ```
+
+
 
 
 
