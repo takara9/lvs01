@@ -23,9 +23,29 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 ### ポータブル・サブネット
 https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。
 
-### その他
-- Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号
-- Webサーバー側のループバックI/F設定、ARP設定の変更
+### 実サーバーのIPアドレスとポート
+- Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号のCHEFのアトビュートとして設定するため、事前に確保しておく必要があります。
+
+### Webサーバー側のループバックI/F設定
+受けたパケットを実サーバーへフォワードするため、実サーバーでVIPのパケットを受信できる様に設定しなければなりません。Debian/Ubuntuでは /etc/network/interfacesのファイルに以下を追加する必要があります。 
+
+```
+auto lo:1
+iface lo:1 inet static
+      address 161.202.132.84    <-- VIPに置き換える
+      netmask 255.255.255.255
+```
+
+### ARP設定の変更
+ARPリクエスト受信時に、ループバックに割り当てたIPで応答しない様にします。この設定を外すと、LVSをバイパスして実サーバー転送される事になるので注意です。
+
+```
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+```
+
 
 
 
@@ -149,12 +169,3 @@ Authors: Maho Takara
 License: see LICENCE file
 
 
-
-# ウェブサーバーのループバックI/Fに設定を追加する
-
-```
-auto lo:1
-iface lo:1 inet static
-      address 161.202.132.84
-      netmask 255.255.255.240
-```
