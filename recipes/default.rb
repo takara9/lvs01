@@ -17,7 +17,7 @@ execute 'ufw_for_lvs' do
 end
 
 execute 'ufw_for_http' do
-  command "/usr/sbin/ufw allow from #{node['virtual_portno1']}"
+  command "/usr/sbin/ufw allow #{node['virtual_portno1']}"
   ignore_failure true
 end
 

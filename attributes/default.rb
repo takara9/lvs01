@@ -1,4 +1,5 @@
 default["virtual_ipaddress1"]   = "161.202.132.84"
+default["virtual_portno1"]      = "80"
 default["real_server_ip_addr1"] = "161.202.142.206"
 default["real_server_port1"]    = "80"
 default["real_server_ip_addr2"] = "161.202.142.199"
