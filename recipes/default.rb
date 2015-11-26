@@ -79,8 +79,8 @@ execute 'sysctl' do
   command '/sbin/sysctl -p'
 end
 
-cookbook_file "/etc/sysctl.conf" do
-  source 'sysctl.conf'
+template "/etc/sysctl.conf" do
+  source 'sysctl.conf.erb'
   owner "root"
   group "root"
   mode 0644
