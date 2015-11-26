@@ -44,6 +44,7 @@ template "/etc/keepalived/keepalived.conf" do
   mode 0644
   variables({
     :vip1    => node["virtual_ipaddress1"],
+    :vport1  => node["virtual_portno1"],
     :rsv_ip1 => node["real_server_ip_addr1"],
     :rsv_pt1 => node["real_server_port1"],
     :rsv_ip2 => node["real_server_ip_addr2"],

@@ -2,6 +2,14 @@ lvs01 Cookbook
 ==============
 Linux Virtual Server (LVS)を使って負荷分散装置を構成するクックブック
 
+
+```
+# curl -L https://www.opscode.com/chef/install.sh | bash
+# knife cookbook create dummy -o /var/chef/cookbooks
+# cd /var/chef/cookbooks
+# git clone https://github.com/takara9/lvs01
+```
+
 TODO: Enter the cookbook description here.
 
 e.g.
