@@ -1,33 +1,26 @@
 lvs01 Cookbook
 ==============
-Linux Virtual Server (LVS)を使って負荷分散装置を構成するクックブック
+Linux Virtual Server (LVS)を使って負荷分散サーバーを構築するクックブックです。
+
+LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利用してHA構成を作ります。この時必要なVIPは、SOFTLAYERのポータブルサブネットを利用します。このポータブルサブネットは、VLANに対して追加でサブネットを割り当てるもので、Private と Public の両方のアドレスをオーダーできるので、インターネットからのアクセスと、Private VLAN内のサーバー同志のアクセスに利用できます。
 
 
-```
-# curl -L https://www.opscode.com/chef/install.sh | bash
-# knife cookbook create dummy -o /var/chef/cookbooks
-# cd /var/chef/cookbooks
-# git clone https://github.com/takara9/lvs01
-```
-
-TODO: Enter the cookbook description here.
-
-e.g.
-This cookbook makes your favorite breakfast sandwich.
-
-Requirements
+要件
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-e.g.
-#### packages
-- `toaster` - lvs01 needs toaster to brown your bagel.
+* 確認済オペレーティング・システム
+- Ubuntu Linux 14.04 LTS Trusty Tahr - Minimal Install (64 bit) 
 
-Attributes
+* ポータブル・サブネット
+https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。
+
+* Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号
+
+
+
+アトリビュート
 ----------
-TODO: List your cookbook attributes here.
 
-e.g.
 #### lvs01::default
 <table>
   <tr>
@@ -36,46 +29,98 @@ e.g.
     <th>Description</th>
     <th>Default</th>
   </tr>
-  <tr>
-    <td><tt>['lvs01']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+
+  <tr> 
+    <td>["virtual_ipaddress1"]</td>
+    <td>IP address</td>
+    <td>代表となるIP (VIP)</td>
+    <td>NULL (必須)</td>
+  </tr>
+
+  <tr> 
+    <td>["virtual_portno1"]</td>
+    <td>Port Number</td>
+    <td>代表となるポート番号</td>
+    <td>NULL (必須)</td>
+  </tr>
+
+  <tr> 
+    <td>["persistence_timeout"]</td>
+    <td>Number</td>
+    <td>振り分けを固執する秒数</td>
+    <td>0</td>
+  </tr>
+
+  <tr> 
+    <td>["public_prim_subnet"]</td>
+    <td>Number</td>
+    <td>LVS nodes が所属するサブネットとマスク</td>
+    <td>161.202.142.192/28</td>
+  </tr>
+
+  <tr> 
+    <td>["real_server_ip_addr1"]</td>
+    <td>IP address</td>
+    <td>実サーバーのIPアドレス</td>
+    <td>NULL (必須)</td>
+  </tr>
+
+  <tr> 
+    <td>["real_server_port1"]</td>
+    <td>Port Number</td>
+    <td>実サーバーのポート番号</td>
+    <td>NULL (必須)</td>
+  </tr>
+
+  <tr> 
+    <td>["real_server_ip_addr2"]</td>
+    <td>IP address</td>
+    <td>実サーバーのIPアドレス</td>
+    <td>NULL (必須)</td>
+  </tr>
+
+  <tr> 
+    <td>["real_server_port2"]</td>
+    <td>Port Number</td>
+    <td>実サーバーのポート番号</td>
+    <td>NULL (必須)</td>
   </tr>
 </table>
 
-Usage
------
-#### lvs01::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
-Just include `lvs01` in your node's `run_list`:
+使い方
+------------
+以下の順番でコマンドを実行して、サーバーにクックブックを置きます。
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[lvs01]"
-  ]
-}
+```
+# curl -L https://www.opscode.com/chef/install.sh | bash
+# knife cookbook create dummy -o /var/chef/cookbooks
+# cd /var/chef/cookbooks
+# git clone https://github.com/takara9/lvs01
+```
+アトリビュートを環境に合わせて編集して、以下のコマンドでサーバーに適用します。
+
+```
+# chef-solo -o lvs01
 ```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
 
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+
+参考資料
+------------
+1.LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
+2.The Linux Virtual Server Project http://www.linuxvirtualserver.org
+3.RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
+4.RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
+5.Keepalived for Linux http://www.keepalived.org/
+
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+
+Authors: Maho Takara
+
+License: see LICENCE file
 
 
 
