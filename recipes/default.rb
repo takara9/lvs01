@@ -6,6 +6,7 @@
 #
 #
 
+
 case node['platform']
 # === Debian系 ===
 when 'ubuntu','debian'
@@ -15,16 +16,17 @@ when 'ubuntu','debian'
     ignore_failure true
   end
 
+  # ファイアウォールの設定
   execute 'ufw_for_lvs' do
     command "/usr/sbin/ufw allow from #{node['public_prim_subnet']}"
     ignore_failure true
   end
-
   execute 'ufw_for_http' do
     command "/usr/sbin/ufw allow #{node['virtual_portno1']}"
     ignore_failure true
   end
 
+  # 追加パッケージ
   %w{
     nmon
     ipvsadm
@@ -38,10 +40,35 @@ when 'ubuntu','debian'
 
 # === RedHat系 ===
 when 'centos','redhat'
+
   execute 'yum update' do
     command 'yum update -y'
     action :run
   end
+
+  service "iptables" do
+    action [ :enable, :start]
+  end
+
+  # ファイアウォールの設定
+  template "/etc/sysconfig/iptables" do
+    source "iptables.erb"
+    owner "root"
+    group "root"
+    mode 0644
+    variables({
+      :lvs_subnet => node['public_prim_subnet'],
+    })
+    action :create
+  end
+
+  # 設定の有効化
+  execute 'iptables-restore' do
+    command 'iptables-restore < /etc/sysconfig/iptables'
+    action :run
+  end
+
+  # 追加パッケージ
   %w{
     ipvsadm.x86_64
     keepalived.x86_64 
