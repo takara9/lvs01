@@ -43,18 +43,19 @@ nf_conntrack: table full, dropping packet.
 ```
 
 コネクションテーブルのサイズを増やしておきます。セッションあたりスワップ対象外のメモリを約350バイトを必要(2),(5)とします。以下の設定では、2000000*350/1024/1024 = 668MB となりますから、メモリ量を考慮しながら設定値を決めます。
+
 ```lang:sysctl.conf
 nf_conntrack_max=2000000
 ```
 
 
 ### 参考URL
-(1) Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
-(2) あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
-(3) DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
-(4) iptables (http://www.iptables.info/en/connection-state.html)
-(5) 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
-(6) Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
+(1). Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
+(2). あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
+(3). DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
+(4). iptables (http://www.iptables.info/en/connection-state.html)
+(5). 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
+(6). Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
 
 
 
