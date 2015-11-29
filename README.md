@@ -8,30 +8,53 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 システム構成
 ------------
 
-## HA構成
+### HA構成
 このクックブックは、次の図の赤破線枠のLVSアクティブ-スタンバイの構成を作ります。マスター状態のLVSサーバーは、VIPを保持して振り分けを実施します。マスター状態のLVSサーバーが居なくなると、スタンバイ状態のLVSサーバーが昇格してVIPを保持して振り分けをおこないます。
 
 ![LVSアクティブ-スタンバイ構成](docs/LVS_ActStby.png)
 
 
-## 要求振分け方式
+### 要求振分け方式
 このクックブックで実現する要求の振分けは、DR(ダイレクト・ルーティング)です。この方式は、要求をVIPで受け、実サーバーへ要求パケットを転送します。応答は、LVSを経由せずに直接返します。
 
 ![DR振分け方法](docs/dr_load_balance.png)
 
 
-## OSファイアウォールの設定
+### OSファイアウォールの設定
+このクックブックでは、次の様なiptablesの設定を行い、ファイアウォール不要を設定にします。
 サーバー個別にiptables設定するのは技術スキル的また作業工数として難しい場合は、専用のファイアウォールを導入すれば簡単に解決できます。しかし、タイトルのヒットを支える高負荷システムでは、ファイアウォールが性能ボトルネックやサービス停止の原因となるリスクを負うことになり、専用ファイアウォールに依存する訳にはいきません。特にLVSの様な、膨大な数のアクセスを裁かなければならない機能では、一層顕著な問題となります。
-そこで、このクックブックでは、次の様なiptablesの設定を行い、ファイアウォール不要を設定にします。
 
 ![LVS-iptables](docs/iptables.png)
 
 
-## カーネルパラメータの変更
-iptables のファイアウォールは、TCPの接続に対して、セッションをトラッキングします。このため、セッショントラッキング用のメモリの拡張が必要です。
+### カーネルパラメータの変更
 
-参考URL http://www.iptables.info/en/connection-state.html
+このCookbookはTCPのセッション追跡テーブルのサイズを拡張します。 TCPのセッション追跡テーブルが溢れると、dmesgに次の様なメッセージを出してパケットを廃棄してしまいます。(1),(2),(3) この様な状況に陥らない様にテーブルサイズを拡大します。
 
+```
+nf_conntrack: table full, dropping packet.
+```
+
+トラッキング数をカウント数監視(4)するには、以下のコマンドで行数を数えます。
+
+```
+# cat /proc/sys/net/netfilter/nf_conntrack_count
+2
+```
+
+コネクションテーブルのサイズを増やしておきます。セッションあたりスワップ対象外のメモリを約350バイトを必要(2),(5)とします。以下の設定では、2000000*350/1024/1024 = 668MB となりますから、メモリ量を考慮しながら設定値を決めます。
+```lang:sysctl.conf
+nf_conntrack_max=2000000
+```
+
+
+### 参考URL
+(1) Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
+(2) あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
+(3) DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
+(4) iptables (http://www.iptables.info/en/connection-state.html)
+(5) 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
+(6) Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
 
 
 
