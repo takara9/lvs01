@@ -84,7 +84,7 @@ iface lo:1 inet static
       netmask 255.255.255.255
 ```
 
-**CentOS6の場合 (lang:/etc/sysconfig/network-scripts/ifcfg-lo:1) **
+**CentOS6の場合 (lang:/etc/sysconfig/network-scripts/ifcfg-lo:1)**
 
 ```
 DEVICE=lo:1
