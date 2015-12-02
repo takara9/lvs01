@@ -72,21 +72,21 @@ https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP
 - Webサーバー等の負荷分散対象のサーバーIPアドレス、ポート番号のCHEFのアトビュートとして設定するため、事前に確保しておく必要があります。
 
 ### 実サーバーのループバックI/F設定
-受けたパケットを実サーバーへフォワードするため、実サーバーでVIPのパケットを受信できる様に設定しなければなりません。Debian/Ubuntuでは /etc/network/interfacesのファイルに以下を追加する必要があります。 
+受けたパケットを実サーバーへフォワードするため、実サーバーでVIPのパケットを受信できる様に設定しなければなりません。Linux ディストリビューションに対応して追加する必要があります。 
 
 
-**Debian/Ubuntuの場合**
+**Debian/Ubuntuの場合 (/etc/network/interfaces)**
 
-```lang:/etc/network/interfaces
+```
 auto lo:1
 iface lo:1 inet static
       address 161.202.132.84    <-- VIPに置き換える
       netmask 255.255.255.255
 ```
 
-**CentOS6の場合**
+**CentOS6の場合 (lang:/etc/sysconfig/network-scripts/ifcfg-lo:1) **
 
-```lang:/etc/sysconfig/network-scripts/ifcfg-lo:1
+```
 DEVICE=lo:1
 IPADDR=161.202.132.84          <-- VIPのアドレスに置き換える
 NETMASK=255.255.255.255
