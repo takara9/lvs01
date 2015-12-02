@@ -1,8 +1,8 @@
 lvs01 Cookbook
 ==============
-Linux Virtual Server (LVS)を使って負荷分散サーバーを構築するクックブックです。
+LVS(Linux Virtual Server) (1) を使って負荷分散サーバーを構築するクックブックです。
 
-LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利用してHA構成を作ります。この時必要なVIPは、SOFTLAYERのポータブルサブネットを利用します。このポータブルサブネットは、VLANに対して追加でサブネットを割り当てるもので、Private と Public の両方のアドレスをオーダーできるので、インターネットからのアクセスと、Private VLAN内のサーバー同志のアクセスに利用できます。
+LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlived(2)を利用してHA構成を作ります。この時必要なVIPは、SOFTLAYERのポータブルサブネットを利用します。このポータブルサブネットは、VLANに対して追加でサブネットを割り当てるもので、Private と Public の両方のアドレスをオーダーできるので、インターネットからのアクセスと、Private VLAN内のサーバー同志のアクセスに利用できます。
 
 
 システム構成
@@ -15,7 +15,7 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 
 
 ### 要求振分け方式
-このクックブックで実現する要求の振分けは、DR(ダイレクト・ルーティング)です。この方式は、要求をVIPで受け、実サーバーへ要求パケットを転送します。応答は、LVSを経由せずに直接返します。
+このクックブックで実現する要求の振分けは、DR(ダイレクト・ルーティング)です。この方式は、要求をVIPで受け、実サーバーへ要求パケットを転送します。応答は、LVSを経由せずに直接返します。(4)(5)(6)
 
 ![DR振分け方法](docs/dr_load_balance.png)
 
@@ -29,20 +29,20 @@ LVSサーバーが単一障害点(SPOF)にならない様に、KeepAlivedを利�
 
 ### カーネルパラメータの変更
 
-このCookbookはTCPのセッション追跡テーブルのサイズを拡張します。 TCPのセッション追跡テーブルが溢れると、dmesgに次の様なメッセージを出してパケットを廃棄してしまいます。(1),(2),(3) この様な状況に陥らない様にテーブルサイズを拡大します。
+このCookbookはTCPのセッション追跡テーブルのサイズを拡張します。 TCPのセッション追跡テーブルが溢れると、dmesgに次の様なメッセージを出してパケットを廃棄してしまいます。(1),(2),(3) この様な状況に陥らない様にテーブルサイズを拡大します。(7)(8)(9)
 
 ```
 nf_conntrack: table full, dropping packet.
 ```
 
-トラッキング数をカウント数監視(4)するには、以下のコマンドで行数を数えます。
+トラッキング数をカウント数監視(10)(12)するには、以下のコマンドで行数を数えます。
 
 ```
 # cat /proc/sys/net/netfilter/nf_conntrack_count
 2
 ```
 
-コネクションテーブルのサイズを増やしておきます。セッションあたりスワップ対象外のメモリを約350バイトを必要(2),(5)とします。以下の設定では、2000000*350/1024/1024 = 668MB となりますから、メモリ量を考慮しながら設定値を決めます。
+コネクションテーブルのサイズを増やしておきます。セッションあたりスワップ対象外のメモリを約350バイトを必要(11)(12)とします。以下の設定では、2000000*350/1024/1024 = 668MB となりますから、メモリ量を考慮しながら設定値を決めます。
 
 ```lang:sysctl.conf
 nf_conntrack_max=2000000
@@ -199,7 +199,7 @@ net.ipv4.conf.all.arp_announce = 2
 ```
 
 ### 動作確認
-次のコマンドで、VIPと実サーバーがリストされていれば、ひとまず動作している事になります。
+次のipvsadm(13)コマンドで、VIPと実サーバーがリストされていれば、ひとまず動作している事になります。
 
 ```
 root@lvs1:/var/chef/cookbooks# ipvsadm -Ln
@@ -217,19 +217,21 @@ TCP  161.202.132.84:80 rr
 参考資料
 ------------
 ### 参考URL
-1. Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
-2. あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
-3. DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
-4. iptables (http://www.iptables.info/en/connection-state.html)
-5. 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
-6. Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
-7. LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
-8. The Linux Virtual Server Project http://www.linuxvirtualserver.org
-9. RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
-10. RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
-11. Keepalived for Linux http://www.keepalived.org/
-12. ipvsadm(8) -Linux man page http://linux.die.net/man/8/ipvsadm
-13. keepalived.conf(5) - Linux man page http://linux.die.net/man/5/keepalived.conf
+
+1. The Linux Virtual Server Project http://www.linuxvirtualserver.org
+2. Keepalived for Linux http://www.keepalived.org/
+3. ソフトレイヤー活用ガイド 4.2 サーバーを替えても同じIPアドレスを継続するには？ https://www.change-makers.jp/post/10345
+4. LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
+5. RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
+6. RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
+7. Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
+8. あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
+9. DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
+10. iptables (http://www.iptables.info/en/connection-state.html)
+11. 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
+12. Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
+13. ipvsadm(8) -Linux man page http://linux.die.net/man/8/ipvsadm
+14. keepalived.conf(5) - Linux man page http://linux.die.net/man/5/keepalived.conf
 
 
 
