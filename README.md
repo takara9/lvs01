@@ -58,6 +58,12 @@ nf_conntrack_max=2000000
 - Debian GNU/Linux 8.x jessie/Stable - Minimal Install (64 bit)
 - CentOS 6.x - Minimal Install (64 bit)
 
+### プロビジョニングスクリプト
+SoftLayerのサーバー起動時に設定するプロビジョニング・スクリプトで次のURLを設定する事を前提にしてます。
+- Ubuntu https://raw.githubusercontent.com/takara9/ProvisioningScript/master/ubuntu_basic_config
+- CentOS6 https://raw.githubusercontent.com/takara9/ProvisioningScript/master/ubuntu_basic_config
+- Debian https://raw.githubusercontent.com/takara9/ProvisioningScript/master/debian_basic_config 
+
 
 ### ポータブル・サブネット
 https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP addresses から事前にオーダーしておきます。取得したサブネットから、VIPに割り当てるIPアドレスを選んでおきます。
