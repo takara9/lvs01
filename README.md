@@ -74,12 +74,26 @@ https://control.softlayer.com/ -> Network -> IP Management -> Subnet -> Order IP
 ### 実サーバーのループバックI/F設定
 受けたパケットを実サーバーへフォワードするため、実サーバーでVIPのパケットを受信できる様に設定しなければなりません。Debian/Ubuntuでは /etc/network/interfacesのファイルに以下を追加する必要があります。 
 
-```
+
+**Debian/Ubuntuの場合**
+
+```lang:/etc/network/interfaces
 auto lo:1
 iface lo:1 inet static
       address 161.202.132.84    <-- VIPに置き換える
       netmask 255.255.255.255
 ```
+
+**CentOS6の場合**
+
+```lang:/etc/sysconfig/network-scripts/ifcfg-lo:1
+DEVICE=lo:1
+IPADDR=161.202.132.84          <-- VIPのアドレスに置き換える
+NETMASK=255.255.255.255
+ONBOOT=yes
+NAME=loopback
+```
+
 
 ###  実サーバーのARP設定の変更
 ARPリクエスト受信時に、ループバックに割り当てたIPで応答しない様にします。この設定を外すと、LVSをバイパスして実サーバー転送される事になるので注意です。
@@ -216,7 +230,6 @@ TCP  161.202.132.84:80 rr
 
 参考資料
 ------------
-### 参考URL
 
 1. The Linux Virtual Server Project http://www.linuxvirtualserver.org
 2. Keepalived for Linux http://www.keepalived.org/
