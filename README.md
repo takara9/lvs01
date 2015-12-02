@@ -49,15 +49,6 @@ nf_conntrack_max=2000000
 ```
 
 
-### 参考URL
-1. Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
-2. あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
-3. DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
-4. iptables (http://www.iptables.info/en/connection-state.html)
-5. 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
-6. Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
-
-
 
 要件
 ------------
@@ -219,13 +210,20 @@ TCP  161.202.132.84:80 rr
 
 参考資料
 ------------
-1. LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
-2. The Linux Virtual Server Project http://www.linuxvirtualserver.org
-3. RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
-4. RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
-5. Keepalived for Linux http://www.keepalived.org/
-6. ipvsadm(8) -Linux man page http://linux.die.net/man/8/ipvsadm
-7. keepalived.conf(5) - Linux man page http://linux.die.net/man/5/keepalived.conf
+### 参考URL
+1. Resolving “nf_conntrack: table full, dropping packet.” flood message in dmesg Linux kernel log (http://pc-freak.net/blog/resolving-nf_conntrack-table-full-dropping-packet-flood-message-in-dmesg-linux-kernel-log/)
+2. あなたの大量配信サーバ、ip_conntrack溢れていませんか？(http://www.e-agency.co.jp/column/20121225.html)
+3. DMMツチノコブログ netfilterモジュール (http://tsuchinoko.dmmlabs.com/?p=1016)
+4. iptables (http://www.iptables.info/en/connection-state.html)
+5. 3.7 ip_conntrack: maximum limit of XXX entries exceeded (http://www.netfilter.org/documentation/FAQ/netfilter-faq-3.html#ss3.7)
+6. Kernel Documentation (https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
+7. LVS-HOWTO http://www.austintek.com/LVS/LVS-HOWTO/HOWTO
+8. The Linux Virtual Server Project http://www.linuxvirtualserver.org
+9. RedHat Enterprise Linux 6 第3章 Load Balancer Add-On の設定 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/6/html/Load_Balancer_Administration/ch-lvs-setup-VSA.html
+10. RedHat Enterprise Linux 7 ロードバランサーの管理 https://access.redhat.com/documentation/ja-JP/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/index.html
+11. Keepalived for Linux http://www.keepalived.org/
+12. ipvsadm(8) -Linux man page http://linux.die.net/man/8/ipvsadm
+13. keepalived.conf(5) - Linux man page http://linux.die.net/man/5/keepalived.conf
 
 
 
